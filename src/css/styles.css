@@ -1,0 +1,56 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.main_nav {
+    margin: 0 auto;
+    text-align: center;
+    height: 80px;
+    background-color: darkblue;
+}
+
+.search-input {
+    margin-top: 26px;
+}
+
+.gallery {
+  
+    margin: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 400px);
+    row-gap: 10px;
+    column-gap: 10px;
+    justify-content: center;
+}
+
+.gallery div {
+    position: relative;
+}
+
+
+.info {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+b {
+    display: flex;
+}
+
+
+img {
+    display: block;
+    margin-left: 5px;
+    height: 300px;
+    width: 400px;
+    object-fit: cover;
+    object-position: center;
+    cursor: pointer;
+}
+
+
