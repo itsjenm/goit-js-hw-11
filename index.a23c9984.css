@@ -1,2 +1,0 @@
-*{box-sizing:border-box}body{margin:0;padding:0}.main_nav{text-align:center;height:80px;background-color:#00008b;margin:0 auto}.search-input{margin-top:26px}.gallery{grid-template-columns:repeat(4,400px);justify-content:center;gap:10px;margin:10px;display:grid}.gallery div{position:relative}.info{justify-content:space-evenly;display:flex}b{display:flex}img{height:300px;width:400px;object-fit:cover;object-position:center;cursor:pointer;margin-left:5px;display:block}
-/*# sourceMappingURL=index.a23c9984.css.map */
