@@ -5,6 +5,7 @@
 body {
     margin: 0;
     padding: 0;
+    text-align: center;
 }
 
 .main_nav {
@@ -54,3 +55,12 @@ img {
 }
 
 
+.load_more {
+    width: 300px;
+    background-color: antiquewhite;
+    
+}
+
+.is_hidden {
+    display: none;
+}
