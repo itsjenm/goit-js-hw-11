@@ -1,4 +1,3 @@
-
 import Notiflix, { Loading } from "notiflix";
 import fetchImages from './js/fetch_images';
 import SimpleLightbox from "simplelightbox";
@@ -11,78 +10,67 @@ const loader = document.querySelector('.load_more');
 
 
 let page = 1;
-const per_page = 40;
+const per_page = 40; //controls the number of items in the group
+const totalPages = page * per_page
 let input = null;
 
 
 
-
+// search button event lister
 searchButton.addEventListener("click",(event) => {
     event.stopPropagation();
     event.preventDefault();
-    console.log("Clicked!")
-    let input = searchBar.value;
-    console.log(searchBar.value)
-    if (input == "" || input == undefined || !input) {
-        loader.classList.add('is_hidden');
+    input = searchBar.value;
+
+    // if inputs are empty don't fetch anything
+    if (input == "" || !input) {
         return Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-    } else {
-        searchImages(input)
-    }
+    } 
 
-   
-    // if (input == "" || input == undefined ) {
-    //     return Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-    // } else {
-    //     try {
-    //         const images = await fetchImages(input) 
-    //         return images
-    //              // console.log(images)
-    //              // renderImageListItems(images);
-    //      } catch (error) {
-    //          console.log(error.message)
-     
-    //      }
-    // }
-
+    searchImages(input)
+        .then((images) => {
+             page += 1
+            if (page > 1) {
+                loader.classList.remove('is_hidden');
+            } 
+        })
+        .catch((error) => console.log(error));
 });
 
 
-loader.addEventListener("click", () => {
+
+// fetch more event listener 
+loader.addEventListener("click", (event) => {
+    // console.log(page)
     let input = searchBar.value;
     loadMore(input)
-    console.log(searchImages())
+   
 });
 
-    // console.log(input)
+
 
 async function searchImages(name) {
-    
+
     imageList.innerHTML = "";
     const key = '33708705-fcc5c6414e4f1d5b337962d91'
     const baseURL = `https://pixabay.com/api/`;
+    page = 1;
     
-
-    const response = await fetchImages(baseURL, key, name, page, per_page);
+    const response = await fetchImages(baseURL, key, name, page, per_page)
     const images = response.data.hits;
     const totalImages = response.data.totalHits;
     
-    if (images.length < 0 || totalImages == 0) {
-        loader.classList.add('is_hidden')
+    if (images.length == [] || totalImages == 0) {
         Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
-    } else if (images.length > 0) {
+    } else {
         Notiflix.Notify.success(`Hooray! We found ${totalImages} images`);
+        // console.log(images)
         blowUpImage(images)
-        loader.classList.remove('is_hidden')
-        console.log(page)
-        page++
-    } else if (images.length > 0 && images.length < 3) {
-        loader.classList.add('is_hidden')
     }
 }
 
 
-
+// function to load the next batch of images
 async function loadMore(name) {
     const key = '33708705-fcc5c6414e4f1d5b337962d91'
     const baseURL = `https://pixabay.com/api/`;
@@ -91,24 +79,22 @@ async function loadMore(name) {
     console.log(response.data.hits)
     const images = response.data.hits;
     const totalImages = response.data.totalHits;
-    const totalPages = page * per_page;
-
-    if (totalImages <= totalPages) {
+    if (images.length < totalPages) {
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
         loader.classList.add('is_hidden');
     }
     blowUpImage(images)
     page += 1
-    console.log(page)
+    // console.log(page)
 }
 
         
-// Run all promises in parallel land wait for their completion
-  
+
+// function to render images 
 function renderImages(images) {
   return images.map((hit) => {
-        const pic = document.createElement("div.photo-card");
-            pic.innerHTML = 
+        const card = document.createElement("div.photo-card");
+            card.innerHTML = 
                 `<a href="${hit.largeImageURL}">
                     <img src="${hit.webformatURL}" alt="Photo of ${hit.tags}" loading="lazy" />
                 </a>
@@ -130,10 +116,12 @@ function renderImages(images) {
                         ${hit.downloads}
                     </p>
                 </div>`;
-        document.querySelector('.gallery').appendChild(pic)
+        document.querySelector('.gallery').appendChild(card)
+        document.querySelector('.gallery').appendChild(loader)
     });
 }
 
+// function used to enable SimpleLightbox
 function blowUpImage(images) {
     const lightbox = new SimpleLightbox('.gallery a', {
         captions: true,
@@ -146,6 +134,11 @@ function blowUpImage(images) {
     lightbox.refresh()
 }
 
+
+
+
+
+// Old code
 // async function fetchImages(name) {
 //     const token = '33708705-fcc5c6414e4f1d5b337962d91'
 //     const videos = await fetch(`https://pixabay.com/api/videos/?key=${token}`);
